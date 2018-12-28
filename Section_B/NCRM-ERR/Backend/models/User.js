@@ -10,14 +10,15 @@ const User = new keystone.List('User', {
 });
 
 User.add({
-	name: {type: Types.Name, required: true, index: true, initial: true},
-	email: {type: Types.Email, initial: true, required: true, unique: true, index: true},
-	password: {type: Types.Password, initial: true, required: true},
-	isVerified: {type: Types.Boolean}
+    name: {type: Types.Text, required: true, index: true},
+    email: {type: Types.Text, initial: true, required: true, unique: true, index: true},
+    age: {type: Types.Number, initial: true},
+    dob: {type: Types.Text},
+    hobbies: {type: Types.TextArray}
 });
 
 /**
  * Registration
  */
-User.defaultColumns = 'name, email, password';
+User.defaultColumns = 'name, email';
 User.register();

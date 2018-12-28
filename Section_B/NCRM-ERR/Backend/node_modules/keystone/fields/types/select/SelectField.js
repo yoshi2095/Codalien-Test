@@ -38,14 +38,19 @@ module.exports = Field.create({
 	},
 
 	renderField () {
-		const { numeric, ops, path, value: val } = this.props;
+		const {numeric, ops, path, value: val} = this.props;
+		let options;
 
-		// TODO: This should be natively handled by the Select component
-		const options = (numeric)
-			? ops.map(function (i) {
-				return { label: i.label, value: String(i.value) };
-			})
-			: ops;
+		if (ops && ops.length >= 2 && ops[0].value === 'dynamic_fn') {
+			options = eval("(" + ops[1].value + ")").call(this, this.props.values, this.props, window.CurrentFormPropsCache);
+		} else {
+			// TODO: This should be natively handled by the Select component
+			options = (numeric)
+				? ops.map(function (i) {
+					return {label: i.label, value: String(i.value)};
+				})
+				: ops;
+		}
 		const value = (typeof val === 'number')
 			? String(val)
 			: val;

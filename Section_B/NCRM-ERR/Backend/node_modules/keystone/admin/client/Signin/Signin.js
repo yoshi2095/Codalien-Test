@@ -95,6 +95,8 @@ var SigninView = React.createClass({
 		});
 		return (
 			<div className="auth-wrapper">
+				<link href="/styles/admin.common.css" rel="stylesheet"/>
+				<link href="/styles/admin.signin.css" rel="stylesheet"/>
 				<Alert
 					isInvalid={this.state.isInvalid}
 					signedOut={this.state.signedOut}
@@ -126,8 +128,7 @@ var SigninView = React.createClass({
 					</div>
 				</div>
 				<div className="auth-footer">
-					<span>Powered by </span>
-					<a href="http://keystonejs.com" target="_blank" title="The Node.js CMS and web application platform (new window)">KeystoneJS</a>
+					<span>{this.props.brand}</span>
 				</div>
 			</div>
 		);

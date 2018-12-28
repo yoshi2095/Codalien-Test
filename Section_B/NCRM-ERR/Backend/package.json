@@ -1,5 +1,5 @@
 {
-  "name": "keystone_boilerplate",
+  "name": "NCRM-ERR",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,6 +11,6 @@
   "dependencies": {
     "express-handlebars": "^3.0.0",
     "handlebars": "^4.0.12",
-    "keystone": "4.0.0-beta.5"
+    "keystone": "git+https://github.com/kushal-likhi/keystone.git#v4beta5"
   }
 }

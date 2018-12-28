@@ -12,7 +12,9 @@ const AdminUser = new keystone.List('AdminUser', {
 AdminUser.add({
 	name: {type: Types.Name, required: true, index: true},
 	email: {type: Types.Email, initial: true, required: true, unique: true, index: true},
-	password: {type: Types.Password, initial: true, required: true},
+	age: {type: Types.Number, initial: true},
+	dob: {type: Types.Date},
+	hobbies: {type: Types.TextArray},
 }, 'Permissions', {
 	isAdmin: {type: Boolean, label: 'Can access Keystone', index: true},
 });

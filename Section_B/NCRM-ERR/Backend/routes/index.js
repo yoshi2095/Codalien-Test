@@ -8,5 +8,8 @@ const routes = {
 
 // Setup Route Bindings
 exports = module.exports = function (app) {
-	app.post('/api/user/login', routes.api.User.login);
+	app.post('/api/user/getUserById', routes.api.User.getUserByID);
+	app.post('/api/user/createUser', routes.api.User.createUser);
+    app.post('/api/user/getUserByEmailID', routes.api.User.getUserByEmailID);
+    app.post('/api/user/updateUserById', routes.api.User.updateUserById);
 };

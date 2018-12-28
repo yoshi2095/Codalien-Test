@@ -8,7 +8,7 @@ var utils = require('keystone-utils');
  * @extends Field
  * @api public
  */
-function select (list, path, options) {
+function select(list, path, options) {
 	this.ui = options.ui || 'select';
 	this.numeric = options.numeric ? true : false;
 	this._nativeType = (options.numeric) ? Number : String;
@@ -21,9 +21,9 @@ function select (list, path, options) {
 		throw new Error('Select fields require an options array.');
 	}
 	this.ops = options.options.map(function (i) {
-		var op = typeof i === 'string' ? { value: i.trim(), label: utils.keyToLabel(i) } : i;
+		var op = typeof i === 'string' ? {value: i.trim(), label: utils.keyToLabel(i)} : i;
 		if (!_.isObject(op)) {
-			op = { label: '' + i, value: '' + i };
+			op = {label: '' + i, value: '' + i};
 		}
 		if (options.numeric && !_.isNumber(op.value)) {
 			op.value = Number(op.value);
@@ -38,6 +38,8 @@ function select (list, path, options) {
 	this.emptyOption = !!options.emptyOption;
 	// cached maps for options, labels and values
 	this.map = utils.optionsMap(this.ops);
+	this.ignoreSelectValidation = !!(this.map['dynamic_fn']);
+	console.log('[DEBUG]', this.map, this.ignoreSelectValidation);
 	this.labels = utils.optionsMap(this.ops, 'label');
 	this.values = _.map(this.ops, 'value');
 	select.super_.call(this, list, path, options);
@@ -117,11 +119,11 @@ select.prototype.addFilterToQuery = function (filter) {
 		}
 	}
 	if (filter.value.length > 1) {
-		query[this.path] = (filter.inverted) ? { $nin: filter.value } : { $in: filter.value };
+		query[this.path] = (filter.inverted) ? {$nin: filter.value} : {$in: filter.value};
 	} else if (filter.value.length === 1) {
-		query[this.path] = (filter.inverted) ? { $ne: filter.value[0] } : filter.value[0];
+		query[this.path] = (filter.inverted) ? {$ne: filter.value[0]} : filter.value[0];
 	} else {
-		query[this.path] = (filter.inverted) ? { $nin: ['', null] } : { $in: ['', null] };
+		query[this.path] = (filter.inverted) ? {$nin: ['', null]} : {$in: ['', null]};
 	}
 	return query;
 };
@@ -130,6 +132,8 @@ select.prototype.addFilterToQuery = function (filter) {
  * Asynchronously confirms that the provided value is valid
  */
 select.prototype.validateInput = function (data, callback) {
+	// Bypass validation
+	if (this.ignoreSelectValidation) return utils.defer(callback, true);
 	var value = this.getValueFromData(data);
 	if (typeof value === 'string' && this.numeric) {
 		value = utils.number(value);
@@ -143,6 +147,7 @@ select.prototype.validateInput = function (data, callback) {
  */
 select.prototype.validateRequiredInput = function (item, data, callback) {
 	var value = this.getValueFromData(data);
+	if (this.ignoreSelectValidation && value) return utils.defer(callback, true);
 	var result = false;
 	if (value === undefined) {
 		if (item.get(this.path)) {
@@ -166,6 +171,8 @@ select.prototype.validateRequiredInput = function (item, data, callback) {
  * Deprecated
  */
 select.prototype.inputIsValid = function (data, required, item) {
+	if (required && data && this.ignoreSelectValidation) return true;
+	if (!required && this.ignoreSelectValidation) return true;
 	if (data[this.path]) {
 		return (data[this.path] in this.map) ? true : false;
 	} else {
