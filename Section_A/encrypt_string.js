@@ -1,4 +1,4 @@
-const encrypt = (str) => {
+const encrypt_string = (str) => {
     let res = '';
 
     for(let i=0; i<str.length; i++){
@@ -30,4 +30,4 @@ const encrypt = (str) => {
     return res;
 };
 
-console.log( encrypt("Yo Yo Yoshita dudes. Lets say hello-world_2, we like using camelCase more than snake_case."));
+console.log( encrypt_string("Yo Yo Yoshita dudes. Lets say hello-world_2, we like using camelCase more than snake_case."));
